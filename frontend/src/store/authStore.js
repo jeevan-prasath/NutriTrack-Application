@@ -11,7 +11,7 @@ const useAuthStore = create(
       loading: false,
       error: null,
 
-      login: async (email, password) => {
+      login: async ({ email, password }) => {
         set({ loading: true, error: null });
         try {
           const { data } = await api.post('/auth/login', { email, password });
@@ -25,10 +25,10 @@ const useAuthStore = create(
         }
       },
 
-      register: async (name, email, password) => {
+      register: async ({ name, email, password, profile }) => {
         set({ loading: true, error: null });
         try {
-          const { data } = await api.post('/auth/register', { name, email, password });
+          const { data } = await api.post('/auth/register', { name, email, password, profile });
           localStorage.setItem('nt_token', data.token);
           set({ user: data.user, token: data.token, isAuthenticated: true, loading: false });
           return { success: true };

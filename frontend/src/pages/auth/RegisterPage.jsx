@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Mail, Lock, ArrowRight, Save } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight, Save, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
 
@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Step 2
   const [age, setAge] = useState('');
@@ -22,7 +23,7 @@ export default function RegisterPage() {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [activityLevel, setActivityLevel] = useState('moderately_active');
-  const [goal, setGoal] = useState('maintain');
+  const [goal, setGoal] = useState('maintain'); // Defaults to maintain (optional)
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -33,11 +34,13 @@ export default function RegisterPage() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!age || !height || !weight) return toast.error('Please complete all fields');
+    if (!age || !height || !weight) return toast.error('Please complete all physical fields');
 
     setLoading(true);
     const res = await registerAction({
-      name, email, password,
+      name, 
+      email, 
+      password,
       profile: { age: parseInt(age), gender, height: parseFloat(height), weight: parseFloat(weight), activityLevel, goal }
     });
     setLoading(false);
@@ -55,6 +58,8 @@ export default function RegisterPage() {
     center: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 }
   };
+
+  const optionStyle = { background: 'var(--color-surface)', color: 'var(--color-text)' };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px' }}>
@@ -96,7 +101,12 @@ export default function RegisterPage() {
                   <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Password</label>
                   <div style={{ position: 'relative' }}>
                     <Lock size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', pointerEvents: 'none' }} />
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="nt-input" style={{ paddingLeft: '44px' }} placeholder="Min 6 characters" />
+                    <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
+                      className="nt-input" style={{ paddingLeft: '44px', paddingRight: '44px' }} placeholder="Min 6 characters" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)}
+                      style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-text-muted)', padding: '8px', cursor: 'pointer', display: 'flex' }}>
+                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                 </div>
 
@@ -117,9 +127,9 @@ export default function RegisterPage() {
                   <div>
                     <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Gender</label>
                     <select value={gender} onChange={e => setGender(e.target.value)} className="nt-input">
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
+                      <option value="male" style={optionStyle}>Male</option>
+                      <option value="female" style={optionStyle}>Female</option>
+                      <option value="other" style={optionStyle}>Other</option>
                     </select>
                   </div>
                 </div>
@@ -136,23 +146,23 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Activity Level</label>
+                  <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Workouts per Week</label>
                   <select value={activityLevel} onChange={e => setActivityLevel(e.target.value)} className="nt-input">
-                    <option value="sedentary">Sedentary (Little/no exercise)</option>
-                    <option value="lightly_active">Lightly Active (1-3 days/wk)</option>
-                    <option value="moderately_active">Moderately Active (3-5 days/wk)</option>
-                    <option value="very_active">Very Active (6-7 days/wk)</option>
-                    <option value="extra_active">Extra Active (Athlete)</option>
+                    <option value="sedentary" style={optionStyle}>Sedentary (Little/no exercise)</option>
+                    <option value="lightly_active" style={optionStyle}>Lightly Active (1-3 days/wk)</option>
+                    <option value="moderately_active" style={optionStyle}>Moderately Active (3-5 days/wk)</option>
+                    <option value="very_active" style={optionStyle}>Very Active (6-7 days/wk)</option>
+                    <option value="extra_active" style={optionStyle}>Extra Active (Athlete)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Primary Goal</label>
+                  <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Primary Goal (Optional)</label>
                   <select value={goal} onChange={e => setGoal(e.target.value)} className="nt-input">
-                    <option value="lose">Lose Weight</option>
-                    <option value="maintain">Maintain Weight</option>
-                    <option value="gain">Gain Muscle / Mass</option>
-                    <option value="recomposition">Body Recomposition</option>
+                    <option value="maintain" style={optionStyle}>Optional (Not sure yet)</option>
+                    <option value="lose" style={optionStyle}>Lose Weight / Fat Loss</option>
+                    <option value="gain" style={optionStyle}>Gain Muscle / Bulk</option>
+                    <option value="recomposition" style={optionStyle}>Body Recomposition</option>
                   </select>
                 </div>
 
