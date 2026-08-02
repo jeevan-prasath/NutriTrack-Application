@@ -126,11 +126,12 @@ export default function RegisterPage() {
                   </div>
                   <div>
                     <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Gender</label>
-                    <select value={gender} onChange={e => setGender(e.target.value)} className="nt-input">
-                      <option value="male" style={optionStyle}>Male</option>
-                      <option value="female" style={optionStyle}>Female</option>
-                      <option value="other" style={optionStyle}>Other</option>
-                    </select>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button type="button" onClick={() => setGender('male')}
+                        style={{ flex: 1, padding: '12px 8px', borderRadius: '12px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', background: gender === 'male' ? 'var(--gradient-brand)' : 'var(--color-surface-4)', color: gender === 'male' ? '#fff' : 'var(--color-text-muted)', border: gender === 'male' ? 'none' : '1px solid var(--white-06)' }}>Male</button>
+                      <button type="button" onClick={() => setGender('female')}
+                        style={{ flex: 1, padding: '12px 8px', borderRadius: '12px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', background: gender === 'female' ? 'var(--gradient-brand)' : 'var(--color-surface-4)', color: gender === 'female' ? '#fff' : 'var(--color-text-muted)', border: gender === 'female' ? 'none' : '1px solid var(--white-06)' }}>Female</button>
+                    </div>
                   </div>
                 </div>
 
@@ -147,23 +148,37 @@ export default function RegisterPage() {
 
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Workouts per Week</label>
-                  <select value={activityLevel} onChange={e => setActivityLevel(e.target.value)} className="nt-input">
-                    <option value="sedentary" style={optionStyle}>Sedentary (Little/no exercise)</option>
-                    <option value="lightly_active" style={optionStyle}>Lightly Active (1-3 days/wk)</option>
-                    <option value="moderately_active" style={optionStyle}>Moderately Active (3-5 days/wk)</option>
-                    <option value="very_active" style={optionStyle}>Very Active (6-7 days/wk)</option>
-                    <option value="extra_active" style={optionStyle}>Extra Active (Athlete)</option>
-                  </select>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px' }}>
+                    {[
+                      { id: 'sedentary', label: '0 Days' },
+                      { id: 'lightly_active', label: '1-3 Days' },
+                      { id: 'moderately_active', label: '3-5 Days' },
+                      { id: 'very_active', label: '6-7 Days' },
+                      { id: 'extra_active', label: 'Athlete' },
+                    ].map(opt => (
+                      <button key={opt.id} type="button" onClick={() => setActivityLevel(opt.id)}
+                        style={{ padding: '10px 4px', borderRadius: '12px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', background: activityLevel === opt.id ? 'var(--color-brand-light)' : 'var(--color-surface-4)', color: activityLevel === opt.id ? '#fff' : 'var(--color-text-muted)', border: activityLevel === opt.id ? 'none' : '1px solid var(--white-06)' }}>
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Primary Goal (Optional)</label>
-                  <select value={goal} onChange={e => setGoal(e.target.value)} className="nt-input">
-                    <option value="maintain" style={optionStyle}>Optional (Not sure yet)</option>
-                    <option value="lose" style={optionStyle}>Lose Weight / Fat Loss</option>
-                    <option value="gain" style={optionStyle}>Gain Muscle / Bulk</option>
-                    <option value="recomposition" style={optionStyle}>Body Recomposition</option>
-                  </select>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    {[
+                      { id: 'maintain', label: 'Optional (Skip)' },
+                      { id: 'lose', label: 'Lose Fat' },
+                      { id: 'gain', label: 'Gain Muscle' },
+                      { id: 'recomposition', label: 'Recomp' },
+                    ].map(opt => (
+                      <button key={opt.id} type="button" onClick={() => setGoal(opt.id)}
+                        style={{ padding: '12px 8px', borderRadius: '12px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', background: goal === opt.id ? 'var(--color-brand-light)' : 'var(--color-surface-4)', color: goal === opt.id ? '#fff' : 'var(--color-text-muted)', border: goal === opt.id ? 'none' : '1px solid var(--white-06)' }}>
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
