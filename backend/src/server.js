@@ -56,7 +56,23 @@ app.use('/api/diary', diaryRoutes);
 app.use('/api/weight', weightRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
-// 404
+// Temporary seed endpoint for Cloud deployments
+app.get('/api/seed', async (req, res) => {
+  try {
+    const { seed } = require('../scripts/seedFoods');
+    const result = await seed();
+    res.json({ success: true, message: `Successfully seeded ${result.count} foods!` });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Base route
+app.get('/', (req, res) => {
+  res.send('NutriTrack API is running');
+});
+
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
 });

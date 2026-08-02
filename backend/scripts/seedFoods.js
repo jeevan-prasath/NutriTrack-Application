@@ -151,8 +151,10 @@ const foods = [
 
 const seed = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ Connected to MongoDB');
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('✅ Connected to MongoDB');
+    }
 
     await Food.deleteMany({});
     console.log('🗑️  Cleared existing foods');
@@ -160,17 +162,18 @@ const seed = async () => {
     const inserted = await Food.insertMany(foods);
     console.log(`✅ Inserted ${inserted.length} foods`);
 
-    // Verify
-    const count = await Food.countDocuments();
-    console.log(`📊 Total foods in DB: ${count}`);
-
-    await mongoose.disconnect();
-    console.log('✅ Seed completed successfully!');
-    process.exit(0);
+    return { success: true, count: inserted.length };
   } catch (error) {
     console.error('❌ Seed error:', error);
-    process.exit(1);
+    throw error;
   }
 };
 
-seed();
+if (require.main === module) {
+  seed().then(() => {
+    mongoose.disconnect();
+    process.exit(0);
+  }).catch(() => process.exit(1));
+}
+
+module.exports = { seed, foods };
