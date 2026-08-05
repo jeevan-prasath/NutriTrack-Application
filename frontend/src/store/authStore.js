@@ -52,8 +52,13 @@ const useAuthStore = create(
         try {
           const { data } = await api.get('/auth/me');
           set({ user: data.user, isAuthenticated: true });
-        } catch {
-          get().logout();
+        } catch (err) {
+          // Only kill session on explicit 401 (bad/expired token)
+          // Not on network errors (ECONNABORTED, timeout, etc.)
+          if (err.response?.status === 401) {
+            get().logout();
+          }
+          // Otherwise silently ignore — keep user logged in
         }
       },
 

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, NavLink } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Search, Calendar, Scale, User, BarChart3, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Search, Scale, BarChart3, Sun, Moon, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Home', end: true },
   { to: '/diary', icon: BookOpen, label: 'Diary' },
   { to: '/search', icon: Search, label: 'Search' },
-  { to: '/calendar', icon: Calendar, label: 'Calendar' },
   { to: '/weight', icon: Scale, label: 'Weight' },
+  { to: '/reports', icon: BarChart3, label: 'Reports' },
 ];
 
 export default function AppLayout() {
@@ -78,7 +78,7 @@ export default function AppLayout() {
           key={location.pathname}
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
         >
           <Outlet />
         </motion.div>
@@ -108,18 +108,6 @@ export default function AppLayout() {
               )}
             </NavLink>
           ))}
-          <NavLink to="/reports">
-            {({ isActive }) => (
-              <motion.div
-                className="nav-item"
-                style={{ color: isActive ? 'var(--color-brand-light)' : 'var(--color-text-muted)', background: isActive ? 'rgba(22,163,74,0.12)' : 'transparent' }}
-                whileTap={{ scale: 0.92 }}
-              >
-                <BarChart3 size={20} />
-                <span style={{ fontSize: '10px', fontWeight: isActive ? 600 : 400 }}>Reports</span>
-              </motion.div>
-            )}
-          </NavLink>
         </div>
       </nav>
     </div>
